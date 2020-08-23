@@ -1,3 +1,3 @@
 import ListDrivers from './ListDrivers';
 
-export default ListDrivers
+export default ListDrivers;
