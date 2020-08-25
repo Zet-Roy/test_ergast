@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useEffect} from 'react';
+import React, {useEffect, useCallback} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {
   View,
@@ -14,8 +14,9 @@ import {
   clearRaces,
 } from '../../store/actions/raceAction';
 import Item from './Item';
+import Header from '../../components/Header';
 
-const RaceResult = ({route}) => {
+const RaceResult = ({route, navigation}) => {
   const dispatch = useDispatch();
   const races_data = useSelector((state) => state.races);
 
@@ -28,6 +29,12 @@ const RaceResult = ({route}) => {
       dispatch(clearRaces());
     };
   }, []);
+
+  // const loadMoreData = useCallback(() => {
+  //   if (races_data.list_race.length < races_data.total) {
+  //     dispatch(fetchMoreRaces({driverId, offset: races_data.offset}));
+  //   }
+  // }, [races_data.offset]);
 
   const loadMoreData = () => {
     if (races_data.list_race.length < races_data.total) {
@@ -65,6 +72,7 @@ const RaceResult = ({route}) => {
 
   return (
     <View style={styles.container}>
+      <Header title={'Race Result'} />
       <View style={styles.headerInfo}>
         <Text>
           {givenName} {familyName}

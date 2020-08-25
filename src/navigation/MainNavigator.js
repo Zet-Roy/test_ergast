@@ -8,7 +8,7 @@ const defaultOptions = {
   headerTransparent: true,
   title: '',
   headerLeft: null,
-  headerBackTitle: ' ',
+  headerBackTitle: '',
 };
 
 const MainNavigator = () => {

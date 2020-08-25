@@ -1,11 +1,12 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
+import Header from '../../components/Header';
 
 const Biography = ({route}) => {
   const {givenName, familyName, dateOfBirth, nationality} = route.params;
-
   return (
     <View style={styles.container}>
+      <Header title={'Biography'} />
       <View>
         <Text style={styles.headerText}>Name</Text>
       </View>
