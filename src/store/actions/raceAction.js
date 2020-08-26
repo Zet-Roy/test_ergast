@@ -33,6 +33,8 @@ export const fetchRaces = ({driverId}) => async (dispatch) => {
 };
 
 export const fetchMoreRaces = ({driverId, offset}) => async (dispatch) => {
+  dispatch({type: types.FETCH_MORE_RACE});
+
   try {
     const {data} = await request.get(
       `f1/drivers/${driverId}/results.json?limit=10&offset=${offset}`,

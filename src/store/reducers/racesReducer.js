@@ -1,6 +1,7 @@
 import {types} from '../actions/raceAction';
 
 const initialState = {
+  isLoadingMore: false,
   isLoading: false,
   offset: 0,
   total: 0,
@@ -26,10 +27,17 @@ const races = (state = initialState, action) => {
         offset,
       };
     }
+    case types.FETCH_MORE_RACE: {
+      return {
+        ...state,
+        isLoadingMore: true,
+      };
+    }
     case types.FETCH_MORE_RACE_SUCCESS: {
       const {list, offset} = action.payload;
       return {
         ...state,
+        isLoadingMore: false,
         list_race: [...state.list_race, ...list],
         offset,
       };

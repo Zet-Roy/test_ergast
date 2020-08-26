@@ -2,6 +2,7 @@ import {types} from '../actions/driversAcrion';
 
 const initialState = {
   isLoading: false,
+  isLoadingMore: false,
   error: null,
   total: 0,
   offset: 0,
@@ -26,10 +27,17 @@ const drivers = (state = initialState, action) => {
         offset,
       };
     }
+    case types.FETCH_MORE_DRIVERS: {
+      return {
+        ...state,
+        isLoadingMore: true,
+      };
+    }
     case types.FETCH_MORE_DRIVERS_SUCCESS: {
       const {list, offset} = action.payload;
       return {
         ...state,
+        isLoadingMore: false,
         list_drivers: [...state.list_drivers, ...list],
         offset,
       };
@@ -38,6 +46,7 @@ const drivers = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
+        isLoadingMore: false,
         error: action.payload,
       };
     }

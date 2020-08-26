@@ -15,7 +15,6 @@ const MainNavigator = () => {
   return (
     <MainStack.Navigator
       screenOptions={defaultOptions}
-      mode="modal"
       initialRouteName="ListDrivers">
       <MainStack.Screen name="ListDrivers" component={ListDrivers} />
       <MainStack.Screen name="Biography" component={Biography} />

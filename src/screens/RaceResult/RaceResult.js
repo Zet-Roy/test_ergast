@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useEffect, useCallback} from 'react';
+import React, {useEffect, useCallback, memo} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {
   View,
@@ -16,7 +16,7 @@ import {
 import Item from './Item';
 import Header from '../../components/Header';
 
-const RaceResult = ({route, navigation}) => {
+const RaceResult = ({route}) => {
   const dispatch = useDispatch();
   const races_data = useSelector((state) => state.races);
 
@@ -30,17 +30,11 @@ const RaceResult = ({route, navigation}) => {
     };
   }, []);
 
-  // const loadMoreData = useCallback(() => {
-  //   if (races_data.list_race.length < races_data.total) {
-  //     dispatch(fetchMoreRaces({driverId, offset: races_data.offset}));
-  //   }
-  // }, [races_data.offset]);
-
-  const loadMoreData = () => {
+  const loadMoreData = useCallback(() => {
     if (races_data.list_race.length < races_data.total) {
       dispatch(fetchMoreRaces({driverId, offset: races_data.offset}));
     }
-  };
+  }, [races_data.list_race.length, races_data.total, races_data.offset]);
 
   if (races_data.isLoading) {
     return (
@@ -55,7 +49,7 @@ const RaceResult = ({route, navigation}) => {
   };
 
   const footerComponents = () => {
-    return races_data.list_race.length < races_data.total ? (
+    return races_data.isLoadingMore ? (
       <ActivityIndicator size="large" color="#0000ff" />
     ) : (
       <View style={styles.footer} />
@@ -81,9 +75,13 @@ const RaceResult = ({route, navigation}) => {
       <FlatList
         data={races_data.list_race}
         renderItem={renderItem}
-        keyExtractor={(_, index) => index.toString()}
+        keyExtractor={(item) => item.season + item.raceName}
         onEndReachedThreshold={0.1}
-        onEndReached={loadMoreData}
+        onEndReached={() => {
+          if (!races_data.isLoadingMore) {
+            loadMoreData();
+          }
+        }}
         ListFooterComponent={footerComponents}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
@@ -108,8 +106,8 @@ const styles = StyleSheet.create({
     height: 20,
   },
   footer: {
-    height: 30,
+    height: 40,
   },
 });
 
-export default RaceResult;
+export default memo(RaceResult);

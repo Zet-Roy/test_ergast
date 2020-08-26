@@ -1,4 +1,5 @@
-import React, {useEffect} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useEffect, useCallback, memo} from 'react';
 import {
   View,
   FlatList,
@@ -22,11 +23,17 @@ const ListDrivers = () => {
 
   useEffect(() => {
     dispatch(fetchDrivers());
-  }, [dispatch]);
+  }, []);
 
-  const loadMoreData = () => {
-    dispatch(fetchMoreDrivers({offset: drivers_data.offset}));
-  };
+  const loadMoreData = useCallback(() => {
+    if (drivers_data.list_drivers.length < drivers_data.total) {
+      dispatch(fetchMoreDrivers({offset: drivers_data.offset}));
+    }
+  }, [
+    drivers_data.list_drivers.length,
+    drivers_data.total,
+    drivers_data.offset,
+  ]);
 
   const renderItem = ({item}) => {
     const {driverId, givenName, familyName, dateOfBirth, nationality} = item;
@@ -62,9 +69,11 @@ const ListDrivers = () => {
   }
 
   const footerComponents = () => {
-    return drivers_data.list_drivers.length < drivers_data.total ? (
+    return drivers_data.isLoadingMore ? (
       <ActivityIndicator size="large" color="#0000ff" />
-    ) : null;
+    ) : (
+      <View style={styles.footer} />
+    );
   };
 
   if (drivers_data.error) {
@@ -83,7 +92,11 @@ const ListDrivers = () => {
         renderItem={renderItem}
         keyExtractor={(item) => item.driverId}
         onEndReachedThreshold={0.1}
-        onEndReached={loadMoreData}
+        onEndReached={() => {
+          if (!drivers_data.isLoadingMore) {
+            loadMoreData();
+          }
+        }}
         ListFooterComponent={footerComponents}
       />
     </View>
@@ -105,6 +118,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginVertical: 20,
   },
+  footer: {
+    height: 40,
+  },
 });
 
-export default ListDrivers;
+export default memo(ListDrivers);

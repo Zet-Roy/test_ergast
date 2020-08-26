@@ -30,6 +30,8 @@ export const fetchDrivers = () => async (dispatch) => {
 };
 
 export const fetchMoreDrivers = ({offset}) => async (dispatch) => {
+  dispatch({type: types.FETCH_MORE_DRIVERS});
+
   try {
     const {data} = await request.get(
       `f1/drivers.json?limit=10&offset=${offset}`,
